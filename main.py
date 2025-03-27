@@ -59,5 +59,23 @@ async def save(ctx: discord.ApplicationContext):
     
     await ctx.send("All attachments have been saved.")
 
+@bot.slash_command(name="random", description="Randomly selects and sends a file")
+async def send_random_file(ctx: discord.ApplicationContext):
+    dir = r"D:\Other\Images_Plus\Funnies"
+
+    files = [f for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]
+    
+    if not files:
+        await ctx.respond(f"No files found in the {dir} folder.")
+        return
+
+    random_file = random.choice(files)
+    file_path = os.path.join(dir, random_file)
+
+    if isinstance(ctx.channel, discord.DMChannel):
+        await ctx.respond(file=discord.File(file_path))
+    else:
+        await ctx.respond(file=discord.File(file_path))
+
 token = os.getenv('bot_token')
 bot.run(token)
